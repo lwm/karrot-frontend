@@ -50,12 +50,12 @@ export default {
     },
   },
   actions: {
-    routeEnter ({ dispatch, rootGetters }, { groupId, storeId, pickupId, userId, messageId, routeTo }) {
+    routeEnter ({ dispatch, rootGetters }, { groupId, placeId, pickupId, userId, messageId, routeTo }) {
       if (pickupId) {
         dispatch('selectPickup', pickupId)
         if (!Platform.is.mobile) {
-          // On desktop we don't have a pickup detail page, we go to the store page, and have a sidebar open
-          throw createRouteRedirect({ name: 'store', params: { groupId, storeId }, query: routeTo.query })
+          // On desktop we don't have a pickup detail page, we go to the place page, and have a sidebar open
+          throw createRouteRedirect({ name: 'place', params: { groupId, placeId }, query: routeTo.query })
         }
       }
       else if (userId) {
@@ -100,7 +100,7 @@ export default {
     },
     openForPickup ({ dispatch }, pickup) {
       if (Platform.is.mobile) {
-        router.push({ name: 'pickupDetail', params: { storeId: pickup.store.id, pickupId: pickup.id } })
+        router.push({ name: 'pickupDetail', params: { placeId: pickup.place.id, pickupId: pickup.id } })
       }
       else {
         dispatch('selectPickup', pickup.id)

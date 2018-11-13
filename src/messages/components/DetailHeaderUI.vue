@@ -15,9 +15,9 @@
         >&nbsp;</span>
         <strong>{{ $d(pickup.date, 'dayAndTime') }}</strong>
         <span slot="subtitle">
-          <strong v-if="pickup.store">
-            <router-link :to="{ name: 'store', params: { groupId: pickup.group.id, storeId: pickup.store.id }}">
-              {{ pickup.store.name }}
+          <strong v-if="pickup.place">
+            <router-link :to="{ name: 'place', params: { groupId: pickup.group.id, placeId: pickup.place.id }}">
+              {{ pickup.place.name }}
             </router-link>
           </strong>
           {{ $d(pickup.date, 'dateShort') }}

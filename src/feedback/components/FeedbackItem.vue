@@ -11,11 +11,11 @@
               {{ $d(pickupDate, 'long') }}
             </strong>
             <router-link
-              v-if="storeName && storeId"
-              :to="{ name: 'store', params: { storeId }}"
+              v-if="placeName && placeId"
+              :to="{ name: 'place', params: { placeId }}"
               class="ellipsis text-secondary"
             >
-              {{ storeName }}
+              {{ placeName }}
             </router-link>
             <router-link
               v-if="feedback.isEditable"
@@ -106,12 +106,12 @@ export default {
     createdAt () {
       return this.feedback && this.feedback.createdAt
     },
-    storeName () {
-      const { about: { store: { name } = {} } = {} } = this.feedback
+    placeName () {
+      const { about: { place: { name } = {} } = {} } = this.feedback
       return name
     },
-    storeId () {
-      const { about: { store: { id } = {} } = {} } = this.feedback
+    placeId () {
+      const { about: { place: { id } = {} } = {} } = this.feedback
       return id
     },
     userName () {

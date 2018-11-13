@@ -77,15 +77,15 @@ export default {
   components: { FeedbackList, QCard, QTooltip, QBtn, QChip },
   computed: {
     ...mapGetters({
-      store: 'stores/activeStore',
-      feedback: 'feedback/byActiveStore',
+      place: 'places/activePlace',
+      feedback: 'feedback/byActivePlace',
       fetchStatus: 'feedback/fetchStatus',
       canFetchPast: 'feedback/canFetchPast',
       fetchPastStatus: 'feedback/fetchPastStatus',
       feedbackPossibleFiltered: 'pickups/feedbackPossibleFiltered',
     }),
     statistics () {
-      return this.store && this.store.statistics
+      return this.place && this.place.statistics
     },
   },
   methods: {

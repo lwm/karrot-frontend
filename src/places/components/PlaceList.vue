@@ -5,29 +5,29 @@
     class="no-padding"
   >
     <q-item
-      v-for="store in stores"
-      :key="store.id"
+      v-for="place in places"
+      :key="place.id"
       link
-      :to="linkParamsFor(store)"
+      :to="linkParamsFor(place)"
     >
       <q-item-side class="text-center">
         <q-icon
-          :name="store.ui.icon"
-          :color="store.ui.color"
-          :title="$t(store.ui.label)"
+          :name="place.ui.icon"
+          :color="place.ui.color"
+          :title="$t(place.ui.label)"
         />
       </q-item-side>
       <q-item-main>
         <q-item-tile label>
-          {{ store.name }}
+          {{ place.name }}
         </q-item-tile>
       </q-item-main>
     </q-item>
 
     <q-item
-      v-if="!hasStores && isEditor"
+      v-if="!hasPlaces && isEditor"
       link
-      :to="{ name: 'storeCreate', params: { groupId } }"
+      :to="{ name: 'placeCreate', params: { groupId } }"
       class="bg-secondary"
       multiline
     >
@@ -48,14 +48,14 @@
       :label="`${$t('STORESTATUS.ARCHIVED')} (${archived.length})`"
     >
       <q-item
-        v-for="store in archived"
-        :key="store.id"
+        v-for="place in archived"
+        :key="place.id"
         link
-        :to="linkParamsFor(store)"
+        :to="linkParamsFor(place)"
       >
         <q-item-main>
           <q-item-tile label>
-            {{ store.name }}
+            {{ place.name }}
           </q-item-tile>
         </q-item-main>
       </q-item>
@@ -71,26 +71,26 @@ export default {
   components: { QList, QListHeader, QItem, QItemMain, QItemTile, QItemSide, QIcon, QTooltip, QCollapsible, QItemSeparator },
   props: {
     groupId: { default: null, type: Number },
-    stores: { required: true, type: Array },
+    places: { required: true, type: Array },
     archived: { default: () => [], type: Array },
-    linkTo: { default: 'store', type: String },
+    linkTo: { default: 'place', type: String },
 
   },
   computed: {
-    hasStores () {
-      return this.stores && this.stores.length > 0
+    hasPlaces () {
+      return this.places && this.places.length > 0
     },
     ...mapGetters({
       isEditor: 'currentGroup/isEditor',
     }),
   },
   methods: {
-    linkParamsFor (store) {
+    linkParamsFor (place) {
       return {
         name: this.linkTo,
         params: {
-          groupId: store.group.id,
-          storeId: store.id,
+          groupId: place.group.id,
+          placeId: place.id,
         },
       }
     },

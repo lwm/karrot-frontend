@@ -18,9 +18,9 @@ function getMessageParams (type, context) {
       return {
         time: context.pickup && i18n.d(context.pickup.date, 'timeShort'),
       }
-    case 'new_store':
+    case 'new_place':
       return {
-        storeName: context.store && context.store.name,
+        placeName: context.place && context.place.name,
       }
   }
 
@@ -40,7 +40,7 @@ function getIcon (type, context) {
       return 'fas fa-balance-scale'
     case 'pickup_upcoming':
       return 'fas fa-calendar-alt'
-    case 'new_store':
+    case 'new_place':
       return 'fas fa-shopping-cart'
     case 'new_applicant':
       return 'fas fa-address-card'
@@ -65,15 +65,20 @@ function getRouteTo (type, context) {
       return context.pickup && context.group && { name: 'giveFeedback', params: { groupId: context.group.id, pickupId: context.pickup.id } }
     case 'application_declined':
       return context.group && { name: 'groupPreview', params: { groupPreviewId: context.group.id } }
-    case 'new_store':
+    case 'new_place':
     case 'pickup_upcoming':
-      return context.store && context.group && { name: 'store', params: { groupId: context.group.id, storeId: context.store.id } }
+      return context.place && context.group && { name: 'place', params: { groupId: context.group.id, placeId: context.place.id } }
   }
+}
+
+function getKey (type) {
+  if (type === 'new_place') type = 'new_store'
+  return `NOTIFICATION_BELLS.${type.toUpperCase()}`
 }
 
 export default function getConfig (type, context) {
   const config = {
-    message: i18n.t(`NOTIFICATION_BELLS.${type.toUpperCase()}`, getMessageParams(type, context)),
+    message: i18n.t(getKey(type), getMessageParams(type, context)),
     icon: getIcon(type, context),
     routeTo: getRouteTo(type, context),
   }

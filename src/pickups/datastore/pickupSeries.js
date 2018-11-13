@@ -19,34 +19,34 @@ export default {
     enrich: (state, getters, rootState, rootGetters) => entry => {
       if (!entry) return
       const pickups = rootGetters['pickups/all'].filter(pickup => pickup.series === entry.id)
-      const store = rootGetters['stores/get'](entry.store)
+      const place = rootGetters['places/get'](entry.place)
       return {
         ...entry,
         pickups,
-        store,
+        place,
         ...metaStatusesWithId(getters, ['save', 'destroy'], entry.id),
       }
     },
     all: (state, getters) => {
       return Object.values(state.entries).map(getters.enrich)
     },
-    byActiveStore: (state, getters) => {
-      return getters.all.filter(series => series.store && series.store.isActiveStore)
+    byActivePlace: (state, getters) => {
+      return getters.all.filter(series => series.place && series.place.isActivePlace)
     },
     ...metaStatuses(['create']),
   },
   actions: {
     ...withMeta({
-      async fetchListForActiveStore ({ commit, rootGetters }) {
-        let storeId = rootGetters['stores/activeStoreId']
-        if (storeId) {
-          commit('set', await pickupSeries.listByStoreId(storeId))
+      async fetchListForActivePlace ({ commit, rootGetters }) {
+        let placeId = rootGetters['places/activePlaceId']
+        if (placeId) {
+          commit('set', await pickupSeries.listByPlaceId(placeId))
         }
       },
 
       async create ({ commit, dispatch }, series) {
         await pickupSeries.create(series)
-        dispatch('fetchListForActiveStore')
+        dispatch('fetchListForActivePlace')
       },
 
       async save ({ commit, dispatch }, series) {
@@ -56,7 +56,7 @@ export default {
 
       async destroy ({ commit, dispatch }, id) {
         await pickupSeries.delete(id)
-        dispatch('fetchListForActiveStore')
+        dispatch('fetchListForActivePlace')
       },
 
     }),

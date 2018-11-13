@@ -74,7 +74,7 @@ describe('currentGroup', () => {
     getForGroup = jest.fn()
   })
 
-  // Reusable store mocks
+  // Reusable place mocks
 
   const groups = {
     getters: {

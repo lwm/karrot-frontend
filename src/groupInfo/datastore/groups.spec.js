@@ -42,7 +42,7 @@ describe('groups', () => {
     group3 = { id: 3, name: 'group 3', members: [userId] }
   })
 
-  // Reusable store mocks
+  // Reusable place mocks
 
   const agreements = {
     getters: {

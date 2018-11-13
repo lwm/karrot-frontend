@@ -12,7 +12,7 @@ const group = factories.makeGroup({
     [currentUser.id]: factories.makeMembership(),
   },
 })
-const store = factories.makeStore({
+const place = factories.makePlace({
   group,
 })
 
@@ -70,15 +70,15 @@ const notifications = [
     context: {
       group,
       pickup: factories.makePickup({
-        store,
+        place,
       }),
     },
   },
   {
-    type: 'new_store',
+    type: 'new_place',
     context: {
       group,
-      store,
+      place,
       user: factories.makeUser(),
     },
   },
@@ -101,9 +101,9 @@ const notifications = [
     expiresAt: addHours(new Date(), 2),
     context: {
       group,
-      store,
+      place,
       pickup: factories.makePickup({
-        store,
+        place,
       }),
     },
   },

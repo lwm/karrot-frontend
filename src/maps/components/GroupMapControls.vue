@@ -27,12 +27,12 @@
     <q-btn
       color="primary"
       :size="options.buttonSize"
-      @click="$emit('toggleStores')"
+      @click="$emit('togglePlaces')"
     >
       <span class="fa-fw fa-stack">
         <i class="fas fa-shopping-cart fa-stack-1x" />
         <i
-          v-if="showStores"
+          v-if="showPlaces"
           class="fas fa-check bottom-right fa-stack-1x"
         />
         <i
@@ -41,7 +41,7 @@
         />
       </span>
       <q-tooltip>
-        {{ $t( showStores ? 'GROUPMAP.HIDE_STORES' : 'GROUPMAP.SHOW_STORES') }}
+        {{ $t( showPlaces ? 'GROUPMAP.HIDE_STORES' : 'GROUPMAP.SHOW_STORES') }}
       </q-tooltip>
     </q-btn>
 
@@ -105,7 +105,7 @@ export default {
     QTooltip,
   },
   props: {
-    showStores: {
+    showPlaces: {
       default: true,
       type: Boolean,
     },

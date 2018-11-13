@@ -1,5 +1,5 @@
 <template>
-  <div v-if="store && store.status === 'archived'">
+  <div v-if="place && place.status === 'archived'">
     <q-card>
       <k-banner
         color="info"
@@ -17,22 +17,22 @@
 
 import { mapGetters } from 'vuex'
 import Markdown from '@/utils/components/Markdown'
-import StoreOptions from '@/sidenav/components/StoreOptions'
+import PlaceOptions from '@/sidenav/components/PlaceOptions'
 
 import { QCard, QTabs, QRouteTab, QScrollArea, QBtn, QIcon } from 'quasar'
 import KBanner from '@/alerts/components/KBanner'
 
 export default {
-  components: { QCard, QTabs, QRouteTab, QScrollArea, KBanner, QBtn, QIcon, StoreOptions, Markdown },
+  components: { QCard, QTabs, QRouteTab, QScrollArea, KBanner, QBtn, QIcon, PlaceOptions, Markdown },
   computed: {
     ...mapGetters({
-      store: 'stores/activeStore',
+      place: 'places/activePlace',
       isEditor: 'currentGroup/isEditor',
     }),
   },
   methods: {
     restore () {
-      this.$datastore.dispatch('stores/save', { id: this.store.id, status: 'created' })
+      this.$datastore.dispatch('places/save', { id: this.place.id, status: 'created' })
     },
   },
 }
@@ -40,7 +40,7 @@ export default {
 
 <style scoped lang="stylus">
 @import '~variables'
-.store-banner
+.place-banner
   margin: 8px 8px -13px 8px
   > span
     display: block
@@ -49,7 +49,7 @@ export default {
     max-height 48px
     overflow hidden
 
-body.mobile .store-banner
+body.mobile .place-banner
   margin: 0px 0px -13px 0px
   border 0
   max-height: 30px

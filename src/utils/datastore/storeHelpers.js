@@ -1,5 +1,5 @@
 /**
- * Store dependent helpers
+ * Place dependent helpers
  */
 
 import datastore from '@/base/datastore'

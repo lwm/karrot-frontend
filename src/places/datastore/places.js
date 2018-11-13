@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import stores from '@/stores/api/stores'
-import { optionsFor } from '@/stores/storeStatus'
+import places from '@/places/api/places'
+import { optionsFor } from '@/places/placeStatus'
 import {
   createMetaModule,
   withMeta,
@@ -16,7 +16,7 @@ function initialState () {
   return {
     entries: {},
     statistics: {},
-    activeStoreId: null,
+    activePlaceId: null,
   }
 }
 
@@ -33,75 +33,75 @@ export default {
     all: (state, getters) => Object.values(state.entries).map(getters.enrich).sort(sortByName).sort(sortByStatus),
     notArchived: (state, getters) => getters.all.filter(s => s.status !== 'archived'),
     archived: (state, getters) => getters.all.filter(s => s.status === 'archived'),
-    filtered: (state, getters) => getters.notArchived.filter(store => getters['toggle/showAll'] || store.status === 'active'),
+    filtered: (state, getters) => getters.notArchived.filter(place => getters['toggle/showAll'] || place.status === 'active'),
     byCurrentGroup: (state, getters, rootState, rootGetters) => getters.filtered.filter(({ group }) => group && group.isCurrentGroup),
     byCurrentGroupArchived: (state, getters, rootState, rootGetters) => getters.archived.filter(({ group }) => group && group.isCurrentGroup),
     get: (state, getters) => id => getters.enrich(state.entries[id]),
-    enrich: (state, getters, rootState, rootGetters) => store => {
-      return store && {
-        ...store,
-        ...metaStatusesWithId(getters, ['save'], store.id),
-        ui: optionsFor(store),
-        group: rootGetters['groups/get'](store.group),
-        statistics: state.statistics[store.id],
-        isActiveStore: store.id === state.activeStoreId,
+    enrich: (state, getters, rootState, rootGetters) => place => {
+      return place && {
+        ...place,
+        ...metaStatusesWithId(getters, ['save'], place.id),
+        ui: optionsFor(place),
+        group: rootGetters['groups/get'](place.group),
+        statistics: state.statistics[place.id],
+        isActivePlace: place.id === state.activePlaceId,
       }
     },
-    activeStore: (state, getters) => getters.get(state.activeStoreId),
-    activeStoreId: state => state.activeStoreId,
+    activePlace: (state, getters) => getters.get(state.activePlaceId),
+    activePlaceId: state => state.activePlaceId,
     ...metaStatuses(['create']),
   },
   actions: {
     ...withMeta({
-      async save ({ dispatch }, store) {
-        dispatch('update', [await stores.save(store)])
-        router.push({ name: 'store', params: { storeId: store.id } })
+      async save ({ dispatch }, place) {
+        dispatch('update', [await places.save(place)])
+        router.push({ name: 'place', params: { placeId: place.id } })
       },
-      async create ({ dispatch, rootGetters }, store) {
-        const createdStore = await stores.create({
-          ...store,
+      async create ({ dispatch, rootGetters }, place) {
+        const createdPlace = await places.create({
+          ...place,
           group: rootGetters['currentGroup/id'],
         })
-        dispatch('update', [createdStore])
-        router.push({ name: 'store', params: { storeId: createdStore.id } })
+        dispatch('update', [createdPlace])
+        router.push({ name: 'place', params: { placeId: createdPlace.id } })
       },
       async fetch ({ commit }) {
-        commit('set', await stores.list())
+        commit('set', await places.list())
       },
 
     }),
     ...withMeta({
-      async selectStore ({ commit, dispatch, getters }, { storeId }) {
-        if (!getters.get(storeId)) {
+      async selectPlace ({ commit, dispatch, getters }, { placeId }) {
+        if (!getters.get(placeId)) {
           try {
-            const store = await stores.get(storeId)
-            commit('update', [store])
+            const place = await places.get(placeId)
+            commit('update', [place])
           }
           catch (error) {
             throw createRouteError()
           }
         }
-        const getStatistics = stores.statistics(storeId)
+        const getStatistics = places.statistics(placeId)
         dispatch('sidenavBoxes/toggle/group', false, { root: true })
-        commit('select', storeId)
-        commit('setStatistics', { data: await getStatistics, id: storeId })
+        commit('select', placeId)
+        commit('setStatistics', { data: await getStatistics, id: placeId })
       },
     }, {
-      findId: ({ storeId }) => storeId,
+      findId: ({ placeId }) => placeId,
     }),
 
-    clearSelectedStore ({ commit, dispatch }) {
+    clearSelectedPlace ({ commit, dispatch }) {
       dispatch('sidenavBoxes/toggle/group', true, { root: true })
       commit('clearSelected')
     },
 
     update ({ commit, dispatch, getters }, update) {
       const old = getters.get(update.id)
-      // make sure we refresh pickups if store status changes
+      // make sure we refresh pickups if place status changes
       // TODO move to vuex plugin in pickups module
       if (old && old.status !== update.status) {
         if (old.status === 'active' || update.status === 'active') {
-          commit('pickups/clearUpcomingForStore', old.id, { root: true })
+          commit('pickups/clearUpcomingForPlace', old.id, { root: true })
           dispatch('pickups/fetchListByGroupId', old.group.id, { root: true })
         }
       }
@@ -109,21 +109,21 @@ export default {
     },
   },
   mutations: {
-    select (state, storeId) {
-      state.activeStoreId = storeId
+    select (state, placeId) {
+      state.activePlaceId = placeId
     },
     clearSelected (state) {
-      state.activeStoreId = null
+      state.activePlaceId = null
     },
-    set (state, stores) {
-      state.entries = indexById(stores)
+    set (state, places) {
+      state.entries = indexById(places)
     },
     clear (state) {
       Object.assign(state, initialState())
     },
-    update (state, stores) {
-      for (const store of stores) {
-        Vue.set(state.entries, store.id, store)
+    update (state, places) {
+      for (const place of places) {
+        Vue.set(state.entries, place.id, place)
       }
     },
     setStatistics (state, { id, data }) {

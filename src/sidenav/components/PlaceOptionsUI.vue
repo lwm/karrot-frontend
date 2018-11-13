@@ -7,14 +7,14 @@
       link
       v-close-overlay
     >
-      <q-item :to="{name: 'storeEdit', params: { storeId }}">
+      <q-item :to="{name: 'placeEdit', params: { placeId }}">
         <q-icon
           size="1em"
           name="fas fa-fw fa-pencil-alt on-left"
         />
         {{ $t('STOREDETAIL.EDIT') }}
       </q-item>
-      <q-item :to="{name: 'storePickupsManage', params: { storeId }}">
+      <q-item :to="{name: 'placePickupsManage', params: { placeId }}">
         <q-icon
           size="1em"
           name="fas fa-fw fa-calendar-alt on-left"
@@ -33,7 +33,7 @@ export default {
     QList, QItem, QIcon, QPopover,
   },
   props: {
-    storeId: { default: null, type: Number },
+    placeId: { default: null, type: Number },
   },
 }
 </script>

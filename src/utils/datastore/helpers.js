@@ -1,6 +1,6 @@
 /**
- * Store independent helpers
- * If a helper depends on the vuex store, put it in storeHelpers.js
+ * Place independent helpers
+ * If a helper depends on the vuex place, put it in storeHelpers.js
  */
 
 import Vue from 'vue'
